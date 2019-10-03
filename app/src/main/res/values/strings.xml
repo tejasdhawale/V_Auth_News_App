@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">V-Auth Machine Test</string>
+    <string name="fetch_data">fetch data</string>
+</resources>
