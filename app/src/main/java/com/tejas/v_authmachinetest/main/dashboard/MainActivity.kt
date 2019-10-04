@@ -11,6 +11,7 @@ import com.tejas.v_authmachinetest.databinding.ActivityMainBinding
 import com.tejas.v_authmachinetest.main.AppNavigator
 import com.tejas.v_authmachinetest.main.BaseActivity
 import com.tejas.v_authmachinetest.main.CommonEvents
+import com.tejas.v_authmachinetest.main.roomDb.AppDbInstance
 
 class MainActivity : BaseActivity() {
 
@@ -34,7 +35,7 @@ class MainActivity : BaseActivity() {
         mBinding?.vm = mViewModel
         mBinding?.lifecycleOwner = this
 
-        mViewModel?.getData()
+        mViewModel?.setData(AppDbInstance.getAppDbInstance(this))
 
         setObserver()
         setToolBar()

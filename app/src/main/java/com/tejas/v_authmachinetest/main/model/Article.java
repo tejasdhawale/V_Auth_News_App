@@ -1,16 +1,22 @@
 package com.tejas.v_authmachinetest.main.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.NotNull;
+
+@Entity(tableName = "article")
 public class Article {
 
-    @SerializedName("source")
-    @Expose
-    private Source source;
     @SerializedName("author")
     @Expose
     private String author;
+    @NonNull
+    @PrimaryKey
     @SerializedName("title")
     @Expose
     private String title;
@@ -30,13 +36,13 @@ public class Article {
     @Expose
     private String content;
 
-    public Source getSource() {
-        return source;
-    }
-
-    public void setSource(Source source) {
-        this.source = source;
-    }
+//    public Source getSource() {
+//        return source;
+//    }
+//
+//    public void setSource(Source source) {
+//        this.source = source;
+//    }
 
     public String getAuthor() {
         return author;
@@ -46,11 +52,12 @@ public class Article {
         this.author = author;
     }
 
+    @NotNull
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@NonNull String title) {
         this.title = title;
     }
 

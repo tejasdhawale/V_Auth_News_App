@@ -13,9 +13,12 @@ class ArticleInfoViewModel(application: Application) :
     BaseApplicationContextViewModel(application) {
     var articleData = MutableLiveData<Article>()
     var date = MutableLiveData<String>("")
+    var author = MutableLiveData<String>("")
+
 
     fun setData(article: Article?) {
         articleData.value = article
+        author.value = if (article?.author.isNullOrBlank()) "No Mentioned" else article?.author
         date.value = DateTimeUtils.formatStringDate(
             articleData.value?.publishedAt
         )

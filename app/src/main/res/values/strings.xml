@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">V-Auth Machine Test</string>
-    <string name="fetch_data">fetch data</string>
+    <string name="fetch_data">fetch New News</string>
+    <string name="loading_new_news_please_wait">Loading new news please wait..</string>
 </resources>

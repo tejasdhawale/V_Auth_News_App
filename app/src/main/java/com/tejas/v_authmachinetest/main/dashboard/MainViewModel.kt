@@ -11,6 +11,7 @@ import com.tejas.v_authmachinetest.main.CommonEvents
 import com.tejas.v_authmachinetest.main.adapter.RecyclerItemClickListener
 import com.tejas.v_authmachinetest.main.dashboard.MainActivity.Companion.SHOW_DETAIL_SCREEN
 import com.tejas.v_authmachinetest.main.model.Article
+import com.tejas.v_authmachinetest.main.roomDb.AppDatabase
 
 
 class MainViewModel(application: Application) : BaseApplicationContextViewModel(application) {
@@ -22,13 +23,31 @@ class MainViewModel(application: Application) : BaseApplicationContextViewModel(
     var recyclerItemClickListener: RecyclerItemClickListener? = null
     var meetingData = MutableLiveData<Article>()
     var showProgress = MutableLiveData<Boolean>(false)
+    val applicatipnContext = application
+    lateinit var myAppDatabase: AppDatabase
 
     init {
         mMainRepo = MainRepo()
-        mMainRepo?.getDataList()
-
-        myRecyclerViewAdapter = ArticleListAdapter(dataModelList)
         setObserver(application)
+        myRecyclerViewAdapter = ArticleListAdapter(dataModelList)
+    }
+
+    //initial route
+    fun setData(appDatabase: AppDatabase) {
+        myAppDatabase = appDatabase
+        checkDbForArticles()
+    }
+
+    private fun checkDbForArticles() {
+        //CHECK FOR COUNT
+        if (myAppDatabase.articleDAO.articles.isEmpty()) {
+            //there are no articles in DB fetch from API
+            mMainRepo?.getDataList()
+        } else {
+            dataModelList.clear()
+            dataModelList.addAll(getVmList(myAppDatabase.articleDAO.articles))
+            myRecyclerViewAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun setObserver(application: Application) {
@@ -59,6 +78,9 @@ class MainViewModel(application: Application) : BaseApplicationContextViewModel(
                 dataModelList.clear()
                 dataModelList.addAll(getVmList(o.articles))
                 myRecyclerViewAdapter.notifyDataSetChanged()
+
+                //saving all data to local DB
+                addAllInRoomDB(o.articles)
             }
         }
 
@@ -74,11 +96,20 @@ class MainViewModel(application: Application) : BaseApplicationContextViewModel(
         }
     }
 
-    fun fetchData(view: View) {
-        getData()
+    private fun addAllInRoomDB(articles: MutableList<Article>) {
+
+
+        val articleDAO = myAppDatabase.articleDAO
+        //clearing previous news
+        articleDAO.clearTable()
+
+        //clearing new news into DB
+        for (article in articles)
+            articleDAO.insert(article)
     }
 
-    fun getData() {
+    fun fetchData(view: View) {
+        //New data need by user fetch from API
         mMainRepo?.getDataList()
     }
 
@@ -91,4 +122,6 @@ class MainViewModel(application: Application) : BaseApplicationContextViewModel(
         }
         return vmList
     }
+
+
 }
